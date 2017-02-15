@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "main": "src/index.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint src test effects.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alex-shnayder/corrie.git"
@@ -23,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/alex-shnayder/corrie/issues"
   },
-  "homepage": "https://github.com/alex-shnayder/corrie#readme"
+  "homepage": "https://github.com/alex-shnayder/corrie#readme",
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-plugin-no-empty-blocks": "0.0.2"
+  }
 }
