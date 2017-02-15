@@ -1,0 +1,27 @@
+{
+  "name": "corrie",
+  "version": "0.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex-shnayder/corrie.git"
+  },
+  "keywords": [
+    "coroutines",
+    "coroutine",
+    "side",
+    "effects",
+    "effects",
+    "control",
+    "flow",
+    "saga",
+    "co"
+  ],
+  "author": "Alex Shnayder <alex@shnayder.pro>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alex-shnayder/corrie/issues"
+  },
+  "homepage": "https://github.com/alex-shnayder/corrie#readme"
+}
