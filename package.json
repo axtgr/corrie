@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src test effects.js"
+    "lint": "./node_modules/.bin/eslint src resolvers test effects.js"
   },
   "repository": {
     "type": "git",

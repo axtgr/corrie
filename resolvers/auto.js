@@ -1,4 +1,4 @@
-let { sync, asIs, auto } = require('./index');
+const { sync, asIs, auto } = require('./index');
 
 module.exports = {
   start: asIs,

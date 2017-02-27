@@ -1,10 +1,10 @@
-let Execution = require('./Execution');
-let resolvers = require('../resolvers/auto');
-let { normalizeRoutine, normalizeResolvers } = require('./utils');
+const Execution = require('./Execution');
+const defaultResolvers = require('../resolvers/auto');
+const { normalizeRoutine, normalizeResolvers } = require('./utils');
 
 
 const DEFAULT_SETTINGS = {
-  resolvers,
+  resolvers: defaultResolvers,
   effects: {
     call: require('./effects/call').handler,
     sleep: require('./effects/sleep').handler,
@@ -16,12 +16,13 @@ const DEFAULT_SETTINGS = {
 
 
 function corrie(settings, routine) {
+  let { effects, resolvers } = settings;
+
+  resolvers = normalizeResolvers(resolvers);
   routine = normalizeRoutine(routine);
-  resolvers = normalizeResolvers(settings.resolvers);
 
   return function corrieExecution(...args) {
-    let execution = new Execution(settings, resolvers, routine);
-    return execution.start(this, args);
+    return new Execution(effects, resolvers, routine).start(this, args);
   };
 }
 
@@ -42,3 +43,5 @@ function setCorrieSettings(settings) {
 
 
 module.exports = setCorrieSettings(DEFAULT_SETTINGS);
+module.exports.Execution = Execution;
+module.exports.DEFAULT_SETTINGS = DEFAULT_SETTINGS;

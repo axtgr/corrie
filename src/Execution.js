@@ -1,12 +1,8 @@
 module.exports =
 class CorrieExecution {
-  constructor(settings, resolvers, routine) {
-    if (!settings) {
-      throw new Error('Settings are required');
-    }
-
-    if (!settings.effects) {
-      throw new Error('Effects must be provided in settings');
+  constructor(effects, resolvers, routine) {
+    if (!effects) {
+      throw new Error('Effects are required');
     }
 
     if (!resolvers) {
@@ -19,8 +15,7 @@ class CorrieExecution {
 
     this.routine = routine;
     this.resolvers = resolvers;
-    this.effects = settings.effects;
-    this.context = settings.context;
+    this.effects = effects;
     this.status = 'pending';
   }
 
@@ -30,7 +25,6 @@ class CorrieExecution {
     }
 
     args = args || [];
-    context = this.context || context;
     this.status = 'started';
     this.iterator = this.routine.apply(context, args)[Symbol.iterator]();
 
