@@ -90,9 +90,6 @@ function handle(value, done, cb) {
       case '_produce':
         return value.value;
 
-      case '_return':
-        return this.complete(value.value);
-
       case '_resolveValue':
         return this.resolvers.value(cb, value.value);
 

@@ -3,7 +3,7 @@ function _return(value) {
 }
 
 function returnHandler(effect) {
-  return { effect: '_return', value: effect.value };
+  return this.complete(effect.value);
 }
 
 module.exports.factory = _return;
