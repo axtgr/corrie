@@ -82,14 +82,22 @@ function handle(value, done, cb) {
 
     value = effectHandler.call(this, value);
 
-    if (value && value.effect) {
-      if (value.effect === '_resolveValue') {
-        return this.resolvers.value(cb, value.value);
-      } else {
-        return handle.call(this, value, done, cb);
-      }
+    if (!value || !value.effect) {
+      return cb(value);
     }
 
-    return cb(value);
+    switch (value.effect) {
+      case '_produce':
+        return value.value;
+
+      case '_return':
+        return this.complete(value.value);
+
+      case '_resolveValue':
+        return this.resolvers.value(cb, value.value);
+
+      default:
+        return handle.call(this, value, done, cb);
+    }
   }, value);
 }
