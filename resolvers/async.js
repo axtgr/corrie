@@ -1,7 +1,7 @@
-const { asIs, auto } = require('./index');
+const { async, asIs, auto } = require('./index');
 
 module.exports = {
-  start: asIs,
+  start: async,
   resume: asIs,
   handle: asIs,
   value: auto,
