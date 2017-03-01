@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
     call: require('./effects/call').handler,
     sleep: require('./effects/sleep').handler,
     resolve: require('./effects/resolve').handler,
+    getResume: require('./effects/getResume').handler,
     produce: require('./effects/produce').handler,
     return: require('./effects/return').handler,
     yield: require('./effects/resolve').handler
