@@ -21,7 +21,7 @@ function callHandler(effect) {
   }
 
   let value = args ? fn.apply(context, args) : fn.call(context);
-  return { effect: 'resolve', value };
+  return { effect: '_resolveValue', value };
 }
 
 module.exports.factory = call;

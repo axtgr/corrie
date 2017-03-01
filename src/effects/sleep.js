@@ -6,7 +6,7 @@ function sleepHandler(effect) {
   let value = new Promise(resolve => {
     setTimeout(resolve, effect.duration);
   });
-  return { effect: 'resolve', value };
+  return { effect: '_resolveValue', value };
 }
 
 module.exports.factory = sleep;
