@@ -16,7 +16,7 @@ function normalizeResolvers(resolvers) {
   if (givenType === 'function') {
     return {
       start: resolvers,
-      step: resolvers,
+      resume: resolvers,
       handle: resolvers,
       value: resolvers,
       complete: resolvers
@@ -24,8 +24,8 @@ function normalizeResolvers(resolvers) {
   }
 
   if (givenType === 'object') {
-    if (!resolvers.start || !resolvers.step || !resolvers.handle || !resolvers.value || !resolvers.complete) {
-      throw new Error('"start", "step", "handle", "value" and "complete" resolvers are required');
+    if (!resolvers.start || !resolvers.resume || !resolvers.handle || !resolvers.value || !resolvers.complete) {
+      throw new Error('"start", "resume", "handle", "value" and "complete" resolvers are required');
     }
 
     return resolvers;

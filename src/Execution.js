@@ -29,8 +29,29 @@ class CorrieExecution {
     this.iterator = this.routine.apply(context, args)[Symbol.iterator]();
 
     return this.resolvers.start(() => {
-      return step.call(this);
+      return this.resume();
     });
+  }
+
+  resume(nextValue) {
+    return this.resolvers.resume(nextValue => {
+      if (this.status !== 'started') {
+        throw new Error(`Cannot resume an execution that is ${this.status}`);
+      }
+
+      let { value, done } = this.iterator.next(nextValue);
+      return handle.call(this, value, done, (handledValue) => {
+        if (this.status === 'completed') {
+          return handledValue;
+        }
+
+        if (done) {
+          return this.complete(handledValue);
+        } else {
+          return this.resume(handledValue);
+        }
+      });
+    }, nextValue);
   }
 
   complete(value) {
@@ -45,27 +66,6 @@ class CorrieExecution {
   }
 };
 
-
-function step(nextValue) {
-  return this.resolvers.step(nextValue => {
-    if (this.status !== 'started') {
-      throw new Error(`Cannot resume an execution that is ${this.status}`);
-    }
-
-    let { value, done } = this.iterator.next(nextValue);
-    return handle.call(this, value, done, (handledValue) => {
-      if (this.status === 'completed') {
-        return handledValue;
-      }
-
-      if (done) {
-        return this.complete(handledValue);
-      } else {
-        return step.call(this, handledValue);
-      }
-    });
-  }, nextValue);
-}
 
 function handle(value, done, cb) {
   return this.resolvers.handle(value => {

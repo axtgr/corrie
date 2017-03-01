@@ -2,7 +2,7 @@ const { sync, asIs, auto } = require('./index');
 
 module.exports = {
   start: asIs,
-  step: sync,
+  resume: sync,
   handle: asIs,
   value: auto,
   complete: asIs
