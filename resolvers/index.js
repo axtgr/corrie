@@ -19,13 +19,11 @@ function resolveAsync(cb, value) {
     return value.then(cb);
   }
 
-  return new Promise((resolve, reject) => {
-    try {
-      resolve(cb(value));
-    } catch (err) {
-      reject(err);
-    }
-  });
+  if (value && typeof value.toPromise === 'function') {
+    return value.toPromise().then(cb);
+  }
+
+  return Promise.resolve(value).then(cb);
 }
 
 function resolveAsIs(cb, value) {
