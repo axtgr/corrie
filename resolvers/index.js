@@ -19,10 +19,6 @@ function resolveAsync(cb, value) {
     return value.then(cb);
   }
 
-  if (value && typeof value.toPromise === 'function') {
-    return value.toPromise().then(cb);
-  }
-
   return Promise.resolve(value).then(cb);
 }
 

@@ -35,6 +35,10 @@ class CorrieExecution {
 
   resume(nextValue) {
     return this.resolvers.resume(nextValue => {
+      if (this.status === 'completed') {
+        return nextValue;
+      }
+
       if (this.status !== 'started') {
         throw new Error(`Cannot resume an execution that is ${this.status}`);
       }
@@ -52,6 +56,10 @@ class CorrieExecution {
         }
       });
     }, nextValue);
+  }
+
+  throw(err) {
+    return this.iterator.throw(err);
   }
 
   complete(value) {
@@ -91,7 +99,9 @@ function handle(value, done, cb) {
         return value.value;
 
       case '_resolveValue':
-        return this.resolvers.value(cb, value.value);
+        return this.resolvers.value(resolvedValue => {
+          return handle.call(this, resolvedValue, done, cb);
+        }, value.value);
 
       default:
         return handle.call(this, value, done, cb);
