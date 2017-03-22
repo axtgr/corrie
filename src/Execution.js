@@ -43,7 +43,17 @@ class CorrieExecution {
         throw new Error(`Cannot resume an execution that is ${this.status}`);
       }
 
-      let { value, done } = this.iterator.next(nextValue);
+      let value, done;
+
+      try {
+        let result = this.iterator.next(nextValue);
+        value = result.value;
+        done = result.done;
+      } catch(err) {
+        value = { effect: 'throw', err };
+        done = false;
+      }
+
       return handle.call(this, value, done, (handledValue) => {
         if (this.status === 'completed') {
           return handledValue;

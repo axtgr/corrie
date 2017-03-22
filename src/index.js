@@ -12,7 +12,8 @@ const DEFAULT_SETTINGS = {
     getResume: require('./effects/getResume').handler,
     produce: require('./effects/produce').handler,
     return: require('./effects/return').handler,
-    yield: require('./effects/resolve').handler
+    yield: require('./effects/resolve').handler,
+    throw: require('./effects/throw').handler
   }
 };
 
