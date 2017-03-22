@@ -1,6 +1,6 @@
 {
   "name": "corrie",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Handle side effects using generators",
   "main": "src/index.js",
   "scripts": {
