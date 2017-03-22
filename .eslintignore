@@ -1,0 +1,7 @@
+build
+dist
+pg
+*.tmp
+.idea
+.vscode
+._*
