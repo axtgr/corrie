@@ -105,7 +105,7 @@ function handle(value, done, cb) {
     }
 
     switch (value.effect) {
-      case '_produce':
+      case '_suspend':
         return value.value;
 
       case '_resolveValue':

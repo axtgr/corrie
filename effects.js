@@ -3,6 +3,6 @@ module.exports = {
   sleep: require('./src/effects/sleep').factory,
   resolve: require('./src/effects/resolve').factory,
   getResume: require('./src/effects/getResume').factory,
-  produce: require('./src/effects/produce').factory,
+  suspend: require('./src/effects/suspend').factory,
   return: require('./src/effects/return').factory
 };
