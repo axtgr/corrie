@@ -1,15 +1,12 @@
 {
   "name": "corrie",
   "version": "0.1.0",
-  "description": "Handle side effects using generators",
-  "main": "src/index.js",
-  "scripts": {
-    "lint": "./node_modules/.bin/eslint src resolvers test effects.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alex-shnayder/corrie.git"
-  },
+  "description": "Embrace the power of coroutines to restrain side effects",
+  "author": "Alex Shnayder <alex@shnayder.pro>",
+  "repository": "alex-shnayder/corrie",
+  "homepage": "https://github.com/alex-shnayder/corrie#readme",
+  "bugs": "https://github.com/alex-shnayder/corrie/issues",
+  "license": "ISC",
   "keywords": [
     "side-effects",
     "effects",
@@ -21,12 +18,10 @@
     "redux-saga",
     "co"
   ],
-  "author": "Alex Shnayder <alex@shnayder.pro>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/alex-shnayder/corrie/issues"
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint src resolvers test effects.js"
   },
-  "homepage": "https://github.com/alex-shnayder/corrie#readme",
+  "main": "src/index.js",
   "devDependencies": {
     "eslint": "^3.18.0",
     "eslint-plugin-no-empty-blocks": "0.0.2"

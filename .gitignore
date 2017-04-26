@@ -8,7 +8,15 @@ components
 Thumbs.db
 *.tmp
 .idea
+.vs
 .vscode
 ._*
 *.log
 .npmrc
+.env
+*.suo
+*.user
+*.ncb
+ipch/
+*.sdf
+*.opensdf
