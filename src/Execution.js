@@ -110,6 +110,10 @@ function handle(value, done, cb) {
 
       case '_resolveValue':
         return this.resolvers.value((resolvedValue) => {
+          if (!resolvedValue || !resolvedValue.effect) {
+            return cb(resolvedValue)
+          }
+
           return handle.call(this, resolvedValue, done, cb)
         }, value.value)
 
