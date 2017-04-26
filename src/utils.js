@@ -1,17 +1,18 @@
-const GENERATOR_PROTO = Object.getPrototypeOf(function*() {});
+const GENERATOR_PROTO = Object.getPrototypeOf(function* () {})
 
 function normalizeRoutine(routine) {
   if (GENERATOR_PROTO.isPrototypeOf(routine)) {
-    return routine;
+    return routine
   }
 
+  // eslint-disable-next-line
   return function* generatorRoutine(...args) {
-    return routine.apply(this, args);
-  };
+    return routine.apply(this, args)
+  }
 }
 
 function normalizeResolvers(resolvers) {
-  let givenType = typeof resolvers;
+  let givenType = typeof resolvers
 
   if (givenType === 'function') {
     return {
@@ -19,19 +20,27 @@ function normalizeResolvers(resolvers) {
       resume: resolvers,
       handle: resolvers,
       value: resolvers,
-      complete: resolvers
-    };
+      complete: resolvers,
+    }
   }
 
   if (givenType === 'object') {
-    if (!resolvers.start || !resolvers.resume || !resolvers.handle || !resolvers.value || !resolvers.complete) {
-      throw new Error('"start", "resume", "handle", "value" and "complete" resolvers are required');
+    if (
+      !resolvers.start ||
+      !resolvers.resume ||
+      !resolvers.handle ||
+      !resolvers.value ||
+      !resolvers.complete
+    ) {
+      throw new Error(
+        '"start", "resume", "handle", "value" and "complete" resolvers are required'
+      )
     }
 
-    return resolvers;
+    return resolvers
   }
 
-  throw new TypeError('Resolvers must be either an object or a function');
+  throw new TypeError('Resolvers must be either an object or a function')
 }
 
-module.exports = { normalizeRoutine, normalizeResolvers };
+module.exports = { normalizeRoutine, normalizeResolvers }
