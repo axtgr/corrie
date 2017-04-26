@@ -19,11 +19,22 @@
     "co"
   ],
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src resolvers test effects.js"
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --print-width 80 --tab-width 2 --no-semi --single-quote --trailing-comma=es5",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "main": "src/index.js",
   "devDependencies": {
-    "eslint": "^3.18.0",
-    "eslint-plugin-no-empty-blocks": "0.0.2"
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-prettier": "^2.0.1",
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.0",
+    "prettier": "^1.2.2"
   }
 }
