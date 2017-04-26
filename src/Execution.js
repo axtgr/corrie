@@ -105,16 +105,16 @@ function handle(value, done, cb) {
     }
 
     switch (value.effect) {
-    case '_suspend':
-      return value.value
+      case '_suspend':
+        return value.value
 
-    case '_resolveValue':
-      return this.resolvers.value((resolvedValue) => {
-        return handle.call(this, resolvedValue, done, cb)
-      }, value.value)
+      case '_resolveValue':
+        return this.resolvers.value((resolvedValue) => {
+          return handle.call(this, resolvedValue, done, cb)
+        }, value.value)
 
-    default:
-      return handle.call(this, value, done, cb)
+      default:
+        return handle.call(this, value, done, cb)
     }
   }, value)
 }

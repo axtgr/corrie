@@ -24,7 +24,9 @@
       "ignoreComments": true,
       "ignoreStrings": true
     }],
-    "indent": ["error", 2],
+    "indent": ["error", 2, {
+      "SwitchCase": 1
+    }],
     "semi": ["error", "never"],
     "quotes": ["error", "single"],
     "brace-style": "error",
