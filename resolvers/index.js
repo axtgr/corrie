@@ -1,9 +1,9 @@
 function resolveAuto(cb, value) {
   if (value && typeof value.then === 'function') {
-    return value.then(cb)
+    return cb ? value.then(cb) : value
   }
 
-  return cb(value)
+  return cb ? cb(value) : value
 }
 
 function resolveSync(cb, value) {
@@ -11,19 +11,19 @@ function resolveSync(cb, value) {
     throw new Error('Cannot synchronously resolve a promise')
   }
 
-  return cb(value)
+  return cb ? cb(value) : value
 }
 
 function resolveAsync(cb, value) {
   if (value && typeof value.then === 'function') {
-    return value.then(cb)
+    return cb ? value.then(cb) : value
   }
 
-  return Promise.resolve(value).then(cb)
+  return cb ? Promise.resolve(value).then(cb) : Promise.resolve(value)
 }
 
 function resolveAsIs(cb, value) {
-  return cb(value)
+  return cb ? cb(value) : value
 }
 
 module.exports = {
