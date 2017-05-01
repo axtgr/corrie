@@ -98,7 +98,7 @@ function handle(value, cb) {
       )
     }
 
-    value = effectHandler.call(this, value)
+    value = effectHandler(value, this)
 
     if (!value || !value.effect) {
       return cb(value)

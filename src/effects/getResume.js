@@ -2,9 +2,8 @@ function getResume() {
   return { effect: 'getResume' }
 }
 
-function getResumeHandler() {
-  let resume = (value) => this.resume(value)
-  return resume
+function getResumeHandler(effect, execution) {
+  return (value) => execution.resume(value)
 }
 
 module.exports.factory = getResume
