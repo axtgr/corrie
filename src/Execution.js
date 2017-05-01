@@ -48,12 +48,17 @@ module.exports = class CorrieExecution {
         let result = this.iterator.next(nextValue)
         value = result.value
         done = result.done
+
+        if (!value || !value.effect) {
+          let effect = done ? 'return' : 'yield'
+          value = { effect, value }
+        }
       } catch (err) {
         value = { effect: 'throw', err }
         done = false
       }
 
-      return handle.call(this, value, done, (handledValue) => {
+      return handle.call(this, value, (handledValue) => {
         if (this.status === 'completed') {
           return handledValue
         }
@@ -83,13 +88,8 @@ module.exports = class CorrieExecution {
   }
 }
 
-function handle(value, done, cb) {
+function handle(value, cb) {
   return this.resolvers.handle((value) => {
-    if (!value || !value.effect) {
-      let effect = done ? 'return' : 'yield'
-      value = { effect, value }
-    }
-
     let effectHandler = this.effects[value.effect]
 
     if (typeof effectHandler !== 'function') {
@@ -114,11 +114,11 @@ function handle(value, done, cb) {
             return cb(resolvedValue)
           }
 
-          return handle.call(this, resolvedValue, done, cb)
+          return handle.call(this, resolvedValue, cb)
         }, value.value)
 
       default:
-        return handle.call(this, value, done, cb)
+        return handle.call(this, value, cb)
     }
   }, value)
 }
