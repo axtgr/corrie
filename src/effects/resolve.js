@@ -3,7 +3,7 @@ function resolve(value) {
 }
 
 function resolveHandler(effect) {
-  return { effect: '_resolveValue', value: effect.value }
+  return { effect: '_resolve', value: effect.value }
 }
 
 module.exports.factory = resolve

@@ -108,7 +108,7 @@ function handle(value, cb) {
       case '_suspend':
         return value.value
 
-      case '_resolveValue':
+      case '_resolve':
         return this.resolvers.value((resolvedValue) => {
           if (!resolvedValue || !resolvedValue.effect) {
             return cb(resolvedValue)
