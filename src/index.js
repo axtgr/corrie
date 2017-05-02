@@ -4,7 +4,7 @@ const { normalizeRoutine, normalizeResolvers } = require('./utils')
 
 const DEFAULT_SETTINGS = {
   resolvers: defaultResolvers,
-  effects: {
+  effectHandlers: {
     call: require('./effects/call').handler,
     sleep: require('./effects/sleep').handler,
     resolve: require('./effects/resolve').handler,
@@ -17,13 +17,13 @@ const DEFAULT_SETTINGS = {
 }
 
 function corrie(settings, routine) {
-  let { effects, resolvers } = settings
+  let { effectHandlers, resolvers } = settings
 
   resolvers = normalizeResolvers(resolvers)
   routine = normalizeRoutine(routine)
 
   return function corrieExecution(...args) {
-    return new Execution(effects, resolvers, routine).start(this, args)
+    return new Execution(effectHandlers, resolvers, routine).start(this, args)
   }
 }
 

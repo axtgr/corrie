@@ -1,7 +1,7 @@
 module.exports = class CorrieExecution {
-  constructor(effects, resolvers, routine) {
-    if (!effects) {
-      throw new Error('Effects are required')
+  constructor(effectHandlers, resolvers, routine) {
+    if (!effectHandlers) {
+      throw new Error('Effect handlers are required')
     }
 
     if (!resolvers) {
@@ -14,7 +14,7 @@ module.exports = class CorrieExecution {
 
     this.routine = routine
     this.resolvers = resolvers
-    this.effects = effects
+    this.effectHandlers = effectHandlers
     this.status = 'pending'
   }
 
@@ -90,7 +90,7 @@ module.exports = class CorrieExecution {
 
 function handle(value, cb) {
   return this.resolvers.handle((value) => {
-    let effectHandler = this.effects[value.effect]
+    let effectHandler = this.effectHandlers[value.effect]
 
     if (typeof effectHandler !== 'function') {
       throw new Error(
