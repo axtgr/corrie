@@ -1,4 +1,5 @@
 const Execution = require('./Execution')
+const resolvers = require('../resolvers')
 const defaultResolvers = require('../resolvers/auto')
 const { normalizeRoutine, normalizeResolvers } = require('./utils')
 const compose = require('./compose')
@@ -21,7 +22,6 @@ function corrie(settings, routine) {
   let { effectHandlers, resolvers } = settings
 
   resolvers = normalizeResolvers(resolvers)
-  routine = normalizeRoutine(routine)
 
   return function corrieExecution(...args) {
     return new Execution(effectHandlers, resolvers, routine).start(this, args)
@@ -43,7 +43,15 @@ function setCorrieSettings(settings) {
       throw new Error('Settings are required')
     }
 
-    let routine = args.length > 1 ? compose(args) : args[0]
+    let routine
+
+    if (args.length > 1) {
+      let routines = args.map((r) => normalizeRoutine(r))
+      routine = compose(routines)
+    } else {
+      routine = normalizeRoutine(args[0])
+    }
+
     return corrie(settings, routine)
   }
 }
