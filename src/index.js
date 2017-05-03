@@ -1,11 +1,12 @@
 const Execution = require('./Execution')
-const resolvers = require('../resolvers')
-const defaultResolvers = require('../resolvers/auto')
+const autoResolvers = require('../resolvers/auto')
+const syncResolvers = require('../resolvers/sync')
+const asyncResolvers = require('../resolvers/async')
 const { normalizeRoutine, normalizeResolvers } = require('./utils')
 const compose = require('./compose')
 
 const DEFAULT_SETTINGS = {
-  resolvers: defaultResolvers,
+  resolvers: autoResolvers,
   effectHandlers: {
     call: require('./effects/call').handler,
     sleep: require('./effects/sleep').handler,
@@ -29,7 +30,7 @@ function corrie(settings, routine) {
 }
 
 function setCorrieSettings(settings) {
-  return function polymorphicCorrie(...args) {
+  function polymorphicCorrie(...args) {
     if (typeof args[0] === 'object') {
       settings = Object.assign({}, settings, args[0])
       args = args.slice(1)
@@ -54,6 +55,20 @@ function setCorrieSettings(settings) {
 
     return corrie(settings, routine)
   }
+
+  polymorphicCorrie.auto = (...routines) => {
+    return polymorphicCorrie({ resolvers: autoResolvers }, ...routines)
+  }
+
+  polymorphicCorrie.sync = (...routines) => {
+    return polymorphicCorrie({ resolvers: syncResolvers }, ...routines)
+  }
+
+  polymorphicCorrie.async = (...routines) => {
+    return polymorphicCorrie({ resolvers: asyncResolvers }, ...routines)
+  }
+
+  return polymorphicCorrie
 }
 
 module.exports = setCorrieSettings(DEFAULT_SETTINGS)
