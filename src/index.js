@@ -1,6 +1,7 @@
 const Execution = require('./Execution')
 const defaultResolvers = require('../resolvers/auto')
 const { normalizeRoutine, normalizeResolvers } = require('./utils')
+const compose = require('./compose')
 
 const DEFAULT_SETTINGS = {
   resolvers: defaultResolvers,
@@ -28,17 +29,22 @@ function corrie(settings, routine) {
 }
 
 function setCorrieSettings(settings) {
-  return function polymorphicCorrie(arg) {
-    if (typeof arg === 'object') {
-      settings = Object.assign({}, settings, arg)
-      return setCorrieSettings(settings)
+  return function polymorphicCorrie(...args) {
+    if (typeof args[0] === 'object') {
+      settings = Object.assign({}, settings, args[0])
+      args = args.slice(1)
+
+      if (args.length === 0) {
+        return setCorrieSettings(settings)
+      }
     }
 
     if (!settings) {
       throw new Error('Settings are required')
     }
 
-    return corrie(settings, arg)
+    let routine = args.length > 1 ? compose(args) : args[0]
+    return corrie(settings, routine)
   }
 }
 

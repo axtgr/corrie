@@ -4,5 +4,6 @@ module.exports = {
   resolve: require('./src/effects/resolve').factory,
   getResume: require('./src/effects/getResume').factory,
   suspend: require('./src/effects/suspend').factory,
-  return: require('./src/effects/return').factory
-};
+  return: require('./src/effects/return').factory,
+  next: (...args) => ({ effect: 'next', args }),
+}
