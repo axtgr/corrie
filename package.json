@@ -1,6 +1,6 @@
 {
   "name": "corrie",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Embrace the power of coroutines to restrain side effects",
   "author": "Alex Shnayder <alex@shnayder.pro>",
   "repository": "alex-shnayder/corrie",
