@@ -90,6 +90,12 @@ module.exports = class CorrieExecution {
 
 function handle(value, cb) {
   return this.resolvers.handle((value) => {
+    if (value.effect === 'next') {
+      // The "next" effect is handled in compose, hence this workaround.
+      // Would it be better if it was a regular effect?
+      return cb()
+    }
+
     let effectHandler = this.effectHandlers[value.effect]
 
     if (typeof effectHandler !== 'function') {
