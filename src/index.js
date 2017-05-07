@@ -1,5 +1,6 @@
 const Execution = require('./Execution')
 const autoResolvers = require('../resolvers/auto')
+const asIsResolvers = require('../resolvers/asIs')
 const syncResolvers = require('../resolvers/sync')
 const asyncResolvers = require('../resolvers/async')
 const { normalizeRoutine, normalizeResolvers } = require('./utils')
@@ -58,6 +59,10 @@ function setCorrieSettings(settings) {
 
   polymorphicCorrie.auto = (...routines) => {
     return polymorphicCorrie({ resolvers: autoResolvers }, ...routines)
+  }
+
+  polymorphicCorrie.asIs = (...routines) => {
+    return polymorphicCorrie({ resolvers: asIsResolvers }, ...routines)
   }
 
   polymorphicCorrie.sync = (...routines) => {
