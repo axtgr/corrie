@@ -16,7 +16,11 @@
     "control-flow",
     "saga",
     "redux-saga",
-    "co"
+    "co",
+    "middleware",
+    "pipeline",
+    "compose",
+    "composition"
   ],
   "scripts": {
     "precommit": "lint-staged"
