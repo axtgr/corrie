@@ -2,8 +2,8 @@ function call(fn, ...args) {
   let context
 
   if (Array.isArray(fn)) {
-    context = fn[1]
-    fn = fn[0]
+    context = fn[0]
+    fn = fn[1]
   }
 
   if (typeof fn !== 'function') {
