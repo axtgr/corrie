@@ -11,6 +11,7 @@ const DEFAULT_SETTINGS = {
   effectHandlers: {
     call: require('./effects/call').handler,
     sleep: require('./effects/sleep').handler,
+    print: require('./effects/print').handler,
     resolve: require('./effects/resolve').handler,
     getResume: require('./effects/getResume').handler,
     suspend: require('./effects/suspend').handler,
