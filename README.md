@@ -238,7 +238,13 @@ Pauses the invocation of the chain and returns the provided value to the outside
 
 ### `next(...args)`
 
-When executing a composition of middleware coroutines, pauses the current handler and invokes the next one in the queue passing the provided arguments. Once the next handler is finished, returns its result. If there is no more handler in the queue, simply returns `undefined`.
+When executing a composition of middleware coroutines, pauses the current handler and invokes the next one in the queue passing the provided arguments. Once the next handler is finished, returns its result.
+
+By default, `next` may return `undefined` both as the result value of the next handler and when there is no more handlers in the queue. To get a different value for the no-more-handlers case, use the `or(value)` method of the effect:
+
+```javascript
+yield next(...args).or('no more handlers')
+```
 
 
 ## Custom Effects
