@@ -93,7 +93,7 @@ function handle(value, cb) {
     if (value.effect === 'next') {
       // The "next" effect is handled in compose, hence this workaround.
       // Would it be better if it was a regular effect?
-      return cb()
+      return cb(value.orValue)
     }
 
     let effectHandler = this.effectHandlers[value.effect]

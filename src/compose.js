@@ -23,7 +23,15 @@ function* runRoutines(routines, args) {
     let { value, done } = result
 
     if (value && value.effect === 'next') {
-      nextValue = yield* runRoutines.call(this, routines.slice(1), value.args)
+      if (routines[1]) {
+        nextValue = yield* runRoutines.call(
+          this,
+          routines.slice(1),
+          value.args
+        )
+      } else {
+        nextValue = value.orValue
+      }
     } else if (done) {
       return yield { effect: 'resolve', value }
     } else {

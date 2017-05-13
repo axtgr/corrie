@@ -6,5 +6,5 @@ module.exports = {
   getResume: require('./src/effects/getResume').factory,
   suspend: require('./src/effects/suspend').factory,
   return: require('./src/effects/return').factory,
-  next: (...args) => ({ effect: 'next', args }),
+  next: require('./src/effects/next').factory,
 }
