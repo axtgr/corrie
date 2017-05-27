@@ -2,7 +2,8 @@ function _throw(value) {
   return { effect: 'throw', value }
 }
 
-function throwHandler(effect) {
+function throwHandler(effect, execution) {
+  execution.status = 'completed'
   throw effect.err
 }
 

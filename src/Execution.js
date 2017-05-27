@@ -27,15 +27,27 @@ module.exports = class CorrieExecution {
     this.status = 'started'
     this.iterator = this.routine.apply(context, args)[Symbol.iterator]()
 
-    return this.resolvers.start(() => {
+    return this.resolvers.start((err) => {
+      if (err) {
+        throw err
+      }
+
       return this.resume()
     })
   }
 
-  resume(nextValue) {
-    return this.resolvers.resume((nextValue) => {
+  resume(nextValue, throwNext) {
+    return this.resolvers.resume((err, nextValue) => {
+      if (err) {
+        return this.resume(err, true)
+      }
+
       if (this.status === 'completed') {
-        return nextValue
+        if (throwNext) {
+          throw nextValue
+        } else {
+          return nextValue
+        }
       }
 
       if (this.status !== 'started') {
@@ -45,7 +57,9 @@ module.exports = class CorrieExecution {
       let value, done
 
       try {
-        let result = this.iterator.next(nextValue)
+        let result = throwNext ?
+          this.iterator.throw(nextValue) :
+          this.iterator.next(nextValue)
         value = result.value
         done = result.done
 
@@ -58,15 +72,23 @@ module.exports = class CorrieExecution {
         done = false
       }
 
-      return handle.call(this, value, (handledValue) => {
+      return handle.call(this, value, (err, handledValue) => {
         if (this.status === 'completed') {
-          return handledValue
+          if (err) {
+            throw err
+          } else {
+            return handledValue
+          }
         }
 
         if (done) {
-          return this.complete(handledValue)
+          if (err) {
+            throw err
+          } else {
+            return this.complete(handledValue)
+          }
         } else {
-          return this.resume(handledValue)
+          return err ? this.resume(err, true) : this.resume(handledValue)
         }
       })
     }, nextValue)
@@ -81,7 +103,11 @@ module.exports = class CorrieExecution {
       throw new Error(`Cannot complete an execution that is ${this.status}`)
     }
 
-    return this.resolvers.complete((value) => {
+    return this.resolvers.complete((err, value) => {
+      if (err) {
+        throw err
+      }
+
       this.status = 'completed'
       return value
     }, value)
@@ -89,25 +115,34 @@ module.exports = class CorrieExecution {
 }
 
 function handle(value, cb) {
-  return this.resolvers.handle((value) => {
+  return this.resolvers.handle((err, value) => {
+    if (err) {
+      return cb(err)
+    }
+
     if (value.effect === 'next') {
       // The "next" effect is handled in compose, hence this workaround.
       // Would it be better if it was a regular effect?
-      return cb(value.orValue)
+      return cb(null, value.orValue)
     }
 
     let effectHandler = this.effectHandlers[value.effect]
 
     if (typeof effectHandler !== 'function') {
-      throw new Error(
+      let err = new Error(
         `There is no handler defined for a "${value.effect}" effect`
       )
+      return cb(err)
     }
 
-    value = effectHandler(value, this)
+    try {
+      value = effectHandler(value, this)
+    } catch (err) {
+      return cb(err)
+    }
 
     if (!value || !value.effect) {
-      return cb(value)
+      return cb(null, value)
     }
 
     switch (value.effect) {
@@ -115,9 +150,13 @@ function handle(value, cb) {
         return value.value
 
       case '_resolve':
-        return this.resolvers.value((resolvedValue) => {
+        return this.resolvers.value((err, resolvedValue) => {
+          if (err) {
+            return cb(err)
+          }
+
           if (!resolvedValue || !resolvedValue.effect) {
-            return cb(resolvedValue)
+            return cb(null, resolvedValue)
           }
 
           return handle.call(this, resolvedValue, cb)

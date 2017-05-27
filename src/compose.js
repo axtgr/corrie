@@ -16,26 +16,37 @@ function* runRoutines(routines, args) {
   }
 
   let iterator = routine.apply(this, args)
-  let result, nextValue
+  let result, nextValue, throwNext
 
   while (!result || !result.done) {
-    result = iterator.next(nextValue)
+    result = throwNext ? iterator.throw(nextValue) : iterator.next(nextValue)
+    throwNext = false
     let { value, done } = result
 
     if (value && value.effect === 'next') {
       if (routines[1]) {
-        nextValue = yield* runRoutines.call(
-          this,
-          routines.slice(1),
-          value.args
-        )
+        try {
+          nextValue = yield* runRoutines.call(
+            this,
+            routines.slice(1),
+            value.args
+          )
+        } catch (err) {
+          nextValue = err
+          throwNext = true
+        }
       } else {
         nextValue = value.orValue
       }
     } else if (done) {
       return yield { effect: 'resolve', value }
     } else {
-      nextValue = yield value
+      try {
+        nextValue = yield value
+      } catch (err) {
+        nextValue = err
+        throwNext = true
+      }
     }
   }
 }
