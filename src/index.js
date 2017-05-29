@@ -33,16 +33,18 @@ function corrie(settings, routine) {
 
 function setCorrieSettings(settings) {
   function polymorphicCorrie(...args) {
+    let finalSettings = settings
+
     if (typeof args[0] === 'object') {
-      settings = Object.assign({}, settings, args[0])
+      finalSettings = Object.assign({}, settings, args[0])
       args = args.slice(1)
 
       if (args.length === 0) {
-        return setCorrieSettings(settings)
+        return setCorrieSettings(finalSettings)
       }
     }
 
-    if (!settings) {
+    if (!finalSettings) {
       throw new Error('Settings are required')
     }
 
@@ -55,7 +57,7 @@ function setCorrieSettings(settings) {
       routine = normalizeRoutine(args[0])
     }
 
-    return corrie(settings, routine)
+    return corrie(finalSettings, routine)
   }
 
   polymorphicCorrie.auto = (...routines) => {
