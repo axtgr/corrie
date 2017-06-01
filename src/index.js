@@ -22,12 +22,13 @@ const DEFAULT_SETTINGS = {
 }
 
 function corrie(settings, routine) {
-  let { effectHandlers, resolvers } = settings
+  let { effectHandlers, resolvers, state } = settings
 
   resolvers = normalizeResolvers(resolvers)
 
   return function corrieExecution(...args) {
-    return new Execution(effectHandlers, resolvers, routine).start(this, args)
+    let execution = new Execution(effectHandlers, resolvers, state, routine)
+    return execution.start(this, args)
   }
 }
 

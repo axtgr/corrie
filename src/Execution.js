@@ -1,5 +1,5 @@
 module.exports = class CorrieExecution {
-  constructor(effectHandlers, resolvers, routine) {
+  constructor(effectHandlers, resolvers, state, routine) {
     if (!effectHandlers) {
       throw new Error('Effect handlers are required')
     }
@@ -12,7 +12,12 @@ module.exports = class CorrieExecution {
       throw new TypeError('Routine must be a function')
     }
 
+    if (state && typeof state !== 'object') {
+      throw new TypeError('State must be an object')
+    }
+
     this.routine = routine
+    this.state = state ? Object.assign({}, state) : {}
     this.resolvers = resolvers
     this.effectHandlers = effectHandlers
     this.status = 'pending'
