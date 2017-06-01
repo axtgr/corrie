@@ -191,6 +191,23 @@ yield call([this, doSometing], arg0, arg1)
 yield call(functionThatReturnsAPromise, ...args)
 ```
 
+### `fork(fn, ...args)` *async*
+
+Asynchronously executes the given function as a Corrie routine using the effect handlers, mode, state and context of the current execution. Returns a promise.
+
+```javascript
+yield print(1)
+let promise = yield fork(function* () {
+  yield print(2)
+  return 4
+})
+yield print(3)
+let result = yield resolve(promise) // wait for the fork to complete
+yield print(result)
+
+// 1, 3, 2, 4
+```
+
 ### `resolve(value)` *potentially async*
 
 Resolves the provided value (e.g. a promise) and returns the result. This is the default effect for yielding a non-effect value.
@@ -247,15 +264,40 @@ yield next(...args).or('no more handlers')
 ```
 
 
+## Settings
+
+Along with coroutines and theirs arguments, Corrie accepts a settings object. There are two ways to pass settings to Corrie:
+
+* As the *only* argument to the Corrie function: `let newCorrie = corrie(settings)`. It will return a new Corrie function bound to the settings.
+
+```javascript
+let syncCorrie = corrie({ mode: 'sync' })
+let asyncCorrie = corrie({ mode: 'async' })
+
+function* hey() {
+  yield sleep(100) // using async effect
+  yield print('Hey!')
+}
+
+syncCorrie(hey)() // throws an error
+asyncCorrie(hey)() // prints "Hey!"
+```
+
+* As the first argument along with coroutines: `corrie(settings, coroutine)`. It will instantly invoke the Corrie function with the provided settings and wrap the coroutines.
+
+```javascript
+let coroutine = corrie({ mode: 'async' }, function* () {
+  yield print('Hey!')
+})
+
+coroutine()
+coroutine()
+```
+
+
 ## Custom Effects
 
 You can add your own effects by registering their handlers in a settings object with an `effectHandlers` property. Effect factories don't need to be registered, they are merely a nicer user-land way to create effect objects.
-
-There are two ways to pass settings to Corrie:
-
-* As the only argument to the Corrie function: `let newCorrie = corrie(settings)`. It will return a new Corrie function bound to the settings.
-
-* As the first argument along with coroutines: `corrie(settings, coroutine)`. It will instantly invoke the Corrie function with the provided settings and wrap the coroutines.
 
 Here is an example of using custom effects with Corrie:
 
@@ -292,7 +334,7 @@ For examples of effect handlers, see the [built-in ones](src/effects).
 
 ## Execution Modes
 
-Corrie supports different execution modes that affect how it treats promises. For each mode there is a function assigned to the corresponding property on the main Corrie function.
+Corrie supports different execution modes that affect how it treats promises. You can pass a mode as a setting (e.g. `corrie({ mode: 'async'}, ...)`) or use the corresponding method of the main Corrie function.
 
 ### `auto`
 
@@ -304,19 +346,19 @@ It is the default mode used when you invoke the main Corrie function. In this mo
 * The return value of the execution can be both a promise and a regular value
 
 ```javascript
-// The return value is a regular value
-corrie(function* (a) {
+// The result is a regular value
+let result = corrie(function* (a) {
   return a * 2
-})
+})(1)
 
-// The return value is a promise because `sleep` is an async effect
-corrie(function* (b) {
+// The result is a promise because `sleep` is an async effect
+let promise = corrie(function* (b) {
   yield sleep(100)
   return b * 2
-})
+})(2)
 ```
 
-You can also use the `auto` mode explicitly: `corrie.auto(...)`.
+You can also use the `auto` mode explicitly: `corrie.auto(...)` or `corrie({ mode: 'auto' })`.
 
 
 ### `async`
@@ -327,10 +369,10 @@ You can also use the `auto` mode explicitly: `corrie.auto(...)`.
 * The return value of the execution is always a promise
 
 ```javascript
-// Even in this case the return value is a promise
-corrie.async(function* (a) {
+let double = corrie.async(function* (a) {
   return a * 2
 })
+double(2).then(console.log) // prints "4"
 ```
 
 ### `sync`
@@ -342,10 +384,31 @@ corrie.async(function* (a) {
 
 ```javascript
 // This will throw an error
-corrie.sync(function* (a) {
+corrie({ mode: 'sync' }, function* (a) {
   yield sleep(200)
   return a * 2
+})()
+```
+
+
+## State
+
+The state is a JavaScript object with arbitrary properties attached to a Corrie execution. Effect handlers can use this object to store some data. The built-in effects don't use the state, so it is only useful with custom effects.
+
+You can pass a state using the "state" property in settings:
+
+```javascript
+// Every coroutine wrapped using this function will have the same initial state
+let corrieWithState = corrie({
+  state: { foo: 'bar' }
 })
+
+// In this case the state is used in one particular coroutine
+corrie({
+  state: { bar: 'foo' }
+}, function* () {
+  yield printState()
+})()
 ```
 
 
