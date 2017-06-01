@@ -1,5 +1,6 @@
 module.exports = {
   call: require('./src/effects/call').factory,
+  fork: require('./src/effects/fork').factory,
   sleep: require('./src/effects/sleep').factory,
   print: require('./src/effects/print').factory,
   resolve: require('./src/effects/resolve').factory,

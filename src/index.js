@@ -16,6 +16,7 @@ const DEFAULT_SETTINGS = {
   mode: 'auto',
   effectHandlers: {
     call: require('./effects/call').handler,
+    fork: require('./effects/fork').handler,
     sleep: require('./effects/sleep').handler,
     print: require('./effects/print').handler,
     resolve: require('./effects/resolve').handler,

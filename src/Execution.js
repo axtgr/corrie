@@ -30,6 +30,7 @@ module.exports = class CorrieExecution {
 
     args = args || []
     this.status = 'started'
+    this.context = context
     this.iterator = this.routine.apply(context, args)[Symbol.iterator]()
 
     return this.resolvers.start((err) => {
