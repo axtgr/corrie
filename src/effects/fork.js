@@ -1,7 +1,13 @@
 const Execution = require('../Execution')
 
 function fork(routine, ...args) {
-  return { effect: 'fork', routine, args }
+  let result = { effect: 'fork', routine }
+
+  if (args.length) {
+    result.args = args
+  }
+
+  return result
 }
 
 function forkHandler(effect, execution) {

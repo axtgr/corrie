@@ -1,5 +1,11 @@
 function print(...args) {
-  return { effect: 'print', args }
+  let result = { effect: 'print' }
+
+  if (args.length) {
+    result.args = args
+  }
+
+  return result
 }
 
 function printHandler(effect) {

@@ -12,7 +12,17 @@ function call(fn, ...args) {
     )
   }
 
-  return { effect: 'call', fn, context, args }
+  let result = { effect: 'call', fn }
+
+  if (context) {
+    result.context = context
+  }
+
+  if (args.length) {
+    result.args = args
+  }
+
+  return result
 }
 
 function callHandler(effect) {
