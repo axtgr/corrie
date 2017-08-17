@@ -1,4 +1,5 @@
 const Execution = require('../Execution')
+const { normalizeRoutine } = require('../utils')
 
 function fork(routine, ...args) {
   let result = { effect: 'fork', routine }
@@ -14,11 +15,11 @@ function forkHandler(effect, execution) {
   let { routine, args } = effect
   let { effectHandlers, resolvers, state, context } = execution
 
-  let value = Promise.resolve().then(() => {
-    let newExec = new Execution(effectHandlers, resolvers, state, routine)
-    return newExec.start(context, args)
+  return Promise.resolve().then(() => {
+    routine = normalizeRoutine(routine)
+    let newExecution = new Execution(effectHandlers, resolvers, state, routine)
+    return newExecution.start(context, args)
   })
-  return value
 }
 
 module.exports.factory = fork
