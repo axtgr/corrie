@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
     print: require('./effects/print').handler,
     resolve: require('./effects/resolve').handler,
     getResume: require('./effects/getResume').handler,
+    setRoutine: require('./effects/setRoutine').handler,
     suspend: require('./effects/suspend').handler,
     return: require('./effects/return').handler,
     yield: require('./effects/resolve').handler,
@@ -73,6 +74,8 @@ function setCorrieSettings(settings) {
 
     return corrie(finalSettings, routine)
   }
+
+  polymorphicCorrie.settings = settings
 
   polymorphicCorrie.auto = (...routines) => {
     return polymorphicCorrie({ resolvers: autoResolvers }, ...routines)

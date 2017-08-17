@@ -7,6 +7,7 @@ function normalizeRoutine(routine) {
 
   // eslint-disable-next-line
   return function* generatorRoutine(...args) {
+    yield { effect: 'setRoutine', routine }
     return routine.apply(this, args)
   }
 }

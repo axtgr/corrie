@@ -15,6 +15,8 @@ function* runRoutines(routines, args) {
     throw new TypeError('Every routine must be a function')
   }
 
+  yield { effect: 'setRoutine', routine }
+
   let iterator = routine.apply(this, args)
   let result, nextValue, throwNext
 
