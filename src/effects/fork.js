@@ -1,25 +1,52 @@
 const Execution = require('../Execution')
-const { normalizeRoutine } = require('../utils')
+const autoResolvers = require('../../resolvers/auto')
+const asIsResolvers = require('../../resolvers/asIs')
+const syncResolvers = require('../../resolvers/sync')
+const asyncResolvers = require('../../resolvers/async')
+const { normalizeRoutine, normalizeResolvers } = require('../utils')
 
-function fork(routine, ...args) {
-  let result = { effect: 'fork', routine }
 
-  if (args.length) {
-    result.args = args
+const RESOLVERS = {
+  auto: autoResolvers,
+  asIs: asIsResolvers,
+  sync: syncResolvers,
+  async: asyncResolvers,
+}
+
+
+function fork(mode, routine, ...args) {
+  if (typeof mode === 'function') {
+    if (typeof routine !== 'undefined' || args.length) {
+      args.unshift(routine)
+    }
+
+    routine = mode
+    mode = 'auto'
   }
 
-  return result
+  let effect = { effect: 'fork', mode, routine }
+
+  if (args.length) {
+    effect.args = args
+  }
+
+  return effect
 }
 
 function forkHandler(effect, execution) {
-  let { routine, args } = effect
-  let { effectHandlers, resolvers, state, context } = execution
+  let { routine, mode, args } = effect
+  let { effectHandlers, state, context } = execution
+  let resolvers = RESOLVERS[mode]
 
-  return Promise.resolve().then(() => {
-    routine = normalizeRoutine(routine)
-    let newExecution = new Execution(effectHandlers, resolvers, state, routine)
-    return newExecution.start(context, args)
-  })
+  if (!resolvers) {
+    throw new Error('A valid mode must be provided')
+  }
+
+  resolvers = normalizeResolvers(resolvers)
+  routine = normalizeRoutine(routine)
+
+  let newExecution = new Execution(effectHandlers, resolvers, state, routine)
+  return newExecution.start(context, args)
 }
 
 module.exports.factory = fork
