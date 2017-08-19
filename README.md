@@ -191,13 +191,13 @@ yield call([this, doSometing], arg0, arg1)
 yield call(functionThatReturnsAPromise, ...args)
 ```
 
-### `fork(fn, ...args)` *async*
+### `fork(fn, ...args)` or `fork(mode, fn, ...args)` *async*
 
-Asynchronously executes the given function as a Corrie routine using the effect handlers, mode, state and context of the current execution. Returns a promise.
+Executes the given function as a new Corrie routine using the effect handlers, state and context of the current execution. If the mode parameter is not specified, it is set to "auto".
 
 ```javascript
 yield print(1)
-let promise = yield fork(function* () {
+let promise = yield fork('async', function* () {
   yield print(2)
   return 4
 })
@@ -378,9 +378,9 @@ double(2).then(console.log) // prints "4"
 ### `sync`
 
 * The execution starts synchronously
-* Promises and async effects are disallowed
-* Promises returned from effects and coroutines throw an error
-* The return value of the execution is never a promise
+* Resolving promises and using async effects is disallowed
+* Unresolved promises returned from effects are allowed
+* The return value of the execution must not be a promise
 
 ```javascript
 // This will throw an error
